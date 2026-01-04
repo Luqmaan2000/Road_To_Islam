@@ -1,5 +1,5 @@
 import { Link, Routes, Route } from 'react-router-dom'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './App.css'
 
 function App() {
@@ -39,26 +39,53 @@ function HomeSection() {
   return (
     <div className="section">
       <h2>Welcome to Understanding Islam</h2>
-      <p>This app is designed to provide accurate information about Islam, address common misconceptions, and share the beautiful stories of Prophet Muhammad (peace be upon him).</p>
+      <p>Explore Islam through clear, accurate information and discover the beauty of its teachings. Whether you're curious, seeking answers, or simply want to learn, you're in the right place.</p>
       
       <div className="cards">
         <div className="card">
-          <h3>📚 Learn the Facts</h3>
-          <p>Discover what Islam truly teaches through verified information and sources.</p>
+          <h3>📚 Islam Fundamentals</h3>
+          <p>Start with the basics - learn what Islam is, who Muslims worship, and the core beliefs that guide over 1.8 billion people worldwide.</p>
+          <Link to="/fundamentals" className="card-link">Start Learning →</Link>
         </div>
         <div className="card">
-          <h3>❓ Get Answers</h3>
-          <p>Find clear, respectful answers to common questions and concerns.</p>
+          <h3>👤 Prophet Muhammad</h3>
+          <p>Discover the life of one of history's most influential figures - his character, his message, and his lasting impact on the world.</p>
+          <Link to="/prophet" className="card-link">Explore His Life →</Link>
         </div>
         <div className="card">
-          <h3>📖 Read Stories</h3>
-          <p>Explore inspiring stories from the life of Prophet Muhammad (PBUH).</p>
+          <h3>📖 The Quran</h3>
+          <p>Dive into the holy book of Islam - its preservation, its scientific insights, and its timeless wisdom for modern life.</p>
+          <Link to="/quran" className="card-link">Read the Quran →</Link>
+        </div>
+        <div className="card">
+          <h3>❓ Common Questions</h3>
+          <p>Find clear, respectful answers to the most common questions about Islam - from beliefs to practices to misconceptions.</p>
+          <Link to="/qa" className="card-link">Get Answers →</Link>
+        </div>
+        <div className="card">
+          <h3>🤝 Other Faiths</h3>
+          <p>Explore the connections between Islam, Christianity, and Judaism - shared beliefs, common ground, and mutual respect.</p>
+          <Link to="/religions" className="card-link">Learn More →</Link>
+        </div>
+        <div className="card">
+          <h3>💡 Misconceptions</h3>
+          <p>Address common misunderstandings about Islam with evidence, context, and thoughtful explanations.</p>
+          <Link to="/misconceptions" className="card-link">Clear the Air →</Link>
         </div>
       </div>
 
       <div className="quote-box">
-        <p>"The best among you are those who have the best manners and character."</p>
+        <p>"The seeking of knowledge is obligatory for every Muslim."</p>
         <p className="quote-source">- Prophet Muhammad (PBUH)</p>
+      </div>
+
+      <div className="home-cta">
+        <h3>Ready to Begin Your Journey?</h3>
+        <p>Start with Islam Fundamentals to build a solid foundation, or jump to any topic that interests you most.</p>
+        <div className="home-cta-buttons">
+          <Link to="/fundamentals" className="home-cta-btn primary">Start with Fundamentals</Link>
+          <Link to="/qa" className="home-cta-btn secondary">Browse Questions</Link>
+        </div>
       </div>
     </div>
   )
@@ -1734,48 +1761,288 @@ function HalalMisconception() {
 }
 
 function ProphetSection() {
-  const stories = [
-    {
-      title: "The Trustworthy (Al-Amin)",
-      story: "Even before prophethood, Muhammad (PBUH) was known as 'Al-Amin' (The Trustworthy) in Mecca. People would entrust him with their valuables, knowing he would never betray their trust. When he received the first revelation and faced persecution, he still returned all entrusted items to their owners before leaving Mecca.",
-      lesson: "Integrity and honesty are fundamental Islamic values, even in difficult times."
+  const [activeSection, setActiveSection] = useState('overview')
+
+  const prophetInfo = {
+    overview: {
+      title: "Who Was Prophet Muhammad?",
+      subtitle: "A historical figure, not a myth",
+      content: [
+        {
+          heading: "A Documented Historical Figure",
+          text: "Prophet Muhammad (peace be upon him) was a real person who lived in 7th-century Arabia. His life is among the most well-documented in human history, with detailed records of his words, actions, and character preserved by both his followers and his contemporaries."
+        },
+        {
+          heading: "Central Figure of Islam",
+          text: "Muhammad is the central figure of Islam, believed by Muslims to be the final prophet sent by God. Over 1.8 billion people today revere him as a messenger who brought guidance for humanity."
+        },
+        {
+          heading: "Influence Beyond Religion",
+          text: "His influence extends far beyond religion. He established legal systems, ethical frameworks, and leadership principles that shaped civilizations. His teachings on justice, mercy, and human dignity continue to inspire people of all backgrounds."
+        },
+        {
+          heading: "A Life We Can Understand",
+          text: "Unlike many historical figures whose lives are shrouded in legend, Muhammad's life is documented in remarkable detail. We know about his family, his work, his struggles, his relationships, and his daily habits. This allows us to understand him as a human being, not just a symbol."
+        }
+      ],
+      timeline: [
+        { year: "570 CE", event: "Born in Mecca" },
+        { year: "610 CE", event: "First revelation at age 40" },
+        { year: "622 CE", event: "Migration to Medina" },
+        { year: "630 CE", event: "Peaceful conquest of Mecca" },
+        { year: "632 CE", event: "Passed away in Medina" }
+      ]
     },
-    {
-      title: "Kindness to Animals",
-      story: "The Prophet (PBUH) taught compassion to all creatures. Once, he saw a bird whose chicks had been taken, and the bird was circling in distress. He instructed his companions to return the chicks immediately. He also told the story of a prostitute who entered Paradise because she gave water to a thirsty dog.",
-      lesson: "Kindness to animals is rewarded by God and reflects a believer's character."
+    earlyLife: {
+      title: "Early Life & Background",
+      subtitle: "What kind of person was he before prophethood?",
+      content: [
+        {
+          heading: "Orphaned Early",
+          text: "Muhammad was born in Mecca around 570 CE. His father died before he was born, and his mother passed away when he was only six years old. This early loss meant he experienced hardship and responsibility from a young age."
+        },
+        {
+          heading: "Raised by Relatives",
+          text: "After his mother's death, his grandfather cared for him briefly, and then his uncle Abu Talib became his guardian. Growing up in a large extended family, he learned the value of community and caring for others."
+        },
+        {
+          heading: "Simple Beginnings",
+          text: "He didn't grow up with privilege or power. As a young man, he worked as a shepherd - a humble profession that taught patience and responsibility. Later, he became a merchant, traveling with trade caravans."
+        },
+        {
+          heading: "Living Among His People",
+          text: "He lived among his people, not above them. He experienced the same challenges, hopes, and struggles as those around him. This grounded perspective shaped his understanding of human needs and suffering."
+        }
+      ]
     },
-    {
-      title: "Forgiveness in Conquest",
-      story: "When the Muslims peacefully conquered Mecca after years of persecution, the Prophet (PBUH) could have taken revenge on those who had tortured and killed Muslims. Instead, he declared: 'Go, for you are free.' He forgave his fiercest enemies, showing mercy instead of vengeance.",
-      lesson: "True strength lies in forgiveness and mercy, not revenge."
+    character: {
+      title: "Character & Reputation",
+      subtitle: "Was he known to be honest?",
+      content: [
+        {
+          heading: "Known as 'Al-Amin'",
+          text: "Long before he claimed prophethood, Muhammad was known as 'Al-Amin' - The Trustworthy. This wasn't a title he gave himself; it was how his community described him because of his consistent honesty and integrity."
+        },
+        {
+          heading: "Trusted with Valuables",
+          text: "People in Mecca would entrust him with their money and valuables, knowing he would keep them safe. This trust was remarkable in a society where business dealings were often marked by suspicion and conflict."
+        },
+        {
+          heading: "Chosen as Mediator",
+          text: "When disputes arose between families or tribes, people would ask Muhammad to mediate. His fairness and wisdom were respected across social lines - by the rich and poor, by allies and rivals."
+        },
+        {
+          heading: "Reputation Before Prophethood",
+          text: "His reputation was established decades before he began his mission. When he later called people to a new message, no one could question his character - they had known him as trustworthy for years."
+        }
+      ]
     },
-    {
-      title: "Respect for All People",
-      story: "A Jewish funeral procession passed by the Prophet (PBUH). He stood up out of respect. When told it was a Jewish funeral, he said: 'Is it not a human soul?' This demonstrated that respect and dignity are due to all people, regardless of their faith.",
-      lesson: "Every human being deserves respect and dignity."
+    illiteracy: {
+      title: "Illiteracy & Authorship",
+      subtitle: "Could he have made this up?",
+      content: [
+        {
+          heading: "Unlettered Prophet",
+          text: "Historical records confirm that Muhammad could not read or write. In Arabic, he is called 'Ummi' - the unlettered. This was well-known in his time and is mentioned in early Islamic sources."
+        },
+        {
+          heading: "An Oral Society",
+          text: "7th-century Arabia was largely an oral society. While some people could read, books were rare. Most knowledge was passed down through poetry, storytelling, and memorization. Muhammad grew up in this environment."
+        },
+        {
+          heading: "No Formal Education",
+          text: "He did not study with scholars, nor did he have access to libraries or religious texts. There's no evidence that he studied the Torah, Gospel, or other scriptures before his prophethood."
+        },
+        {
+          heading: "The Qur'an Emerged",
+          text: "The Qur'an, revealed over 23 years, contains detailed narratives about previous prophets, complex legal principles, and profound philosophical concepts. Its emergence in this context - from someone who could not read or write - is historically notable."
+        }
+      ]
     },
-    {
-      title: "The Black Stone Incident",
-      story: "When the Kaaba was being rebuilt, tribes fought over who would place the Black Stone. They were about to go to war. The Prophet (PBUH) suggested a solution: spread a cloth, place the stone on it, and have leaders from each tribe hold the corners. He then placed the stone in position himself, preventing bloodshed.",
-      lesson: "Wisdom and peaceful conflict resolution are better than violence."
+    revelation: {
+      title: "The Beginning of Revelation",
+      subtitle: "When did things change?",
+      content: [
+        {
+          heading: "Age 40",
+          text: "Muhammad was 40 years old when the first revelation came. He was already established in his community, with a reputation for honesty and a stable life. He wasn't a young person seeking direction or an ambitious leader looking for followers."
+        },
+        {
+          heading: "A Pattern of Reflection",
+          text: "For years before the revelation, he would retreat to a cave on Mount Hira outside Mecca. He would spend time in solitude, reflecting on life and the world around him. This was his personal practice, unknown to most people."
+        },
+        {
+          heading: "The First Experience",
+          text: "During one of these retreats, he experienced something that would change his life. He reported being visited by the Angel Gabriel, who commanded him to 'Read.' His response was fear and confusion - he said he could not read."
+        },
+        {
+          heading: "Not Seeking Leadership",
+          text: "He wasn't seeking power, followers, or recognition. His initial reaction was fear and uncertainty. He returned home shaken, wondering if something was wrong with him. His wife Khadijah comforted him and became his first supporter."
+        }
+      ]
+    },
+    message: {
+      title: "Message & Mission",
+      subtitle: "What was he actually calling people to?",
+      content: [
+        {
+          heading: "Worship One God",
+          text: "At the heart of his message was a simple call: worship the One God who created everything. This challenged the idol worship that was central to Meccan society and its economy."
+        },
+        {
+          heading: "Justice and Moral Reform",
+          text: "He called for justice in a society where the weak were exploited. He spoke against the mistreatment of orphans, the oppression of the poor, and the practice of burying infant girls alive."
+        },
+        {
+          heading: "Care for the Vulnerable",
+          text: "His message emphasized caring for those in need - the poor, the widows, the orphans, the slaves. Charity wasn't optional; it was central to the faith he taught."
+        },
+        {
+          heading: "Accountability",
+          text: "He taught that everyone would be held accountable for their actions. This idea gave dignity to the oppressed and warned the powerful that they couldn't escape justice."
+        }
+      ]
+    },
+    opposition: {
+      title: "Opposition & Persecution",
+      subtitle: "What did it cost him?",
+      content: [
+        {
+          heading: "Social Pressure",
+          text: "The Meccan elite opposed his message because it threatened their power and wealth. They mocked him, called him names, and tried to discredit him. His own tribe turned against him."
+        },
+        {
+          heading: "Economic Boycott",
+          text: "For three years, his clan was boycotted - no one could trade with them or marry into their families. They were forced to live in a valley outside Mecca, surviving on leaves and whatever food they could find."
+        },
+        {
+          heading: "Personal Loss",
+          text: "He lost his beloved wife Khadijah and his uncle Abu Talib in the same year. These were his two greatest supporters. This period became known as the 'Year of Sorrow.'"
+        },
+        {
+          heading: "Refused Compromises",
+          text: "The Meccans offered him wealth, power, and even leadership if he would abandon his message. He refused every offer. When given the choice between his mission and comfort, he chose the mission."
+        }
+      ]
+    },
+    leadership: {
+      title: "Leadership & Mercy",
+      subtitle: "How did he behave when he had power?",
+      content: [
+        {
+          heading: "Forgiveness Over Revenge",
+          text: "When Muslims finally conquered Mecca peacefully, Muhammad could have taken revenge on those who had persecuted him. Instead, he declared: 'Go, for you are free.' He forgave his fiercest enemies."
+        },
+        {
+          heading: "Living Modestly",
+          text: "Even as the leader of a growing community, he lived simply. He patched his own clothes, sat on the floor, and ate whatever was available. He said: 'I am a servant of Allah; I eat as a servant eats and sit as a servant sits.'"
+        },
+        {
+          heading: "Building Community",
+          text: "In Medina, he established a constitution that guaranteed rights for all residents, including Jews and Christians. He created a society where different communities could live together in peace."
+        },
+        {
+          heading: "Emphasis on Mercy",
+          text: "He taught that mercy was better than justice, forgiveness better than revenge. When someone asked him to curse his enemies, he replied: 'I was not sent to curse, but as a mercy.'"
+        }
+      ]
+    },
+    legacy: {
+      title: "Death & Legacy",
+      subtitle: "Why does this still matter?",
+      content: [
+        {
+          heading: "Died Without Wealth",
+          text: "When Muhammad passed away in 632 CE, he left behind no wealth. His armor was mortgaged to a Jewish neighbor for food. He died as he lived - simply, with his focus on his message rather than material gain."
+        },
+        {
+          heading: "Message Continued",
+          text: "His death didn't end his message. Within a century, Islam had spread from Spain to India. The civilization that emerged preserved Greek philosophy, advanced mathematics and medicine, and created centers of learning."
+        },
+        {
+          heading: "Influence Across Centuries",
+          text: "Today, over 1.8 billion people follow his teachings. His influence on law, ethics, literature, art, and civilization is immeasurable. He is consistently ranked among the most influential people in history."
+        },
+        {
+          heading: "A Life Worth Understanding",
+          text: "Whether one accepts his message or not, his life is worth understanding. It's the story of someone who faced immense challenges, remained true to his principles, and left a legacy that continues to shape our world."
+        }
+      ]
     }
+  }
+
+  const sections = [
+    { id: 'overview', name: 'Overview', icon: '👤' },
+    { id: 'earlyLife', name: 'Early Life', icon: '👶' },
+    { id: 'character', name: 'Character', icon: '⭐' },
+    { id: 'illiteracy', name: 'Illiteracy', icon: '📝' },
+    { id: 'revelation', name: 'Revelation', icon: '✨' },
+    { id: 'message', name: 'Message', icon: '📢' },
+    { id: 'opposition', name: 'Opposition', icon: '⚔️' },
+    { id: 'leadership', name: 'Leadership', icon: '🤝' },
+    { id: 'legacy', name: 'Legacy', icon: '🌟' }
   ]
 
   return (
     <div className="section">
-      <h2>Stories from the Life of Prophet Muhammad (PBUH)</h2>
-      <p>These stories illustrate the beautiful character and teachings of Prophet Muhammad (peace be upon him).</p>
+      <h2>Prophet Muhammad (PBUH)</h2>
+      <p>A historical figure whose life continues to shape our world</p>
       
-      {stories.map((story, index) => (
-        <div key={index} className="story-card">
-          <h3>{story.title}</h3>
-          <p className="story-text">{story.story}</p>
-          <div className="lesson">
-            <strong>Lesson:</strong> {story.lesson}
+      <div className="quran-nav">
+        {sections.map(section => (
+          <button
+            key={section.id}
+            className={`quran-nav-btn ${activeSection === section.id ? 'active' : ''}`}
+            onClick={() => setActiveSection(section.id)}
+          >
+            <span className="quran-nav-icon">{section.icon}</span>
+            <span className="quran-nav-name">{section.name}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="quran-content">
+        {prophetInfo[activeSection].subtitle && (
+          <p className="prophet-section-subtitle">{prophetInfo[activeSection].subtitle}</p>
+        )}
+        <h3 className="quran-section-title">{prophetInfo[activeSection].title}</h3>
+        
+        {prophetInfo[activeSection].timeline && (
+          <div className="prophet-timeline">
+            {prophetInfo[activeSection].timeline.map((item, index) => (
+              <div key={index} className="timeline-item">
+                <span className="timeline-year">{item.year}</span>
+                <span className="timeline-event">{item.event}</span>
+              </div>
+            ))}
+          </div>
+        )}
+        
+        {prophetInfo[activeSection].content.map((item, index) => (
+          <div key={index} className="quran-item">
+            <h4 className="quran-item-heading">{item.heading}</h4>
+            <p className="quran-item-text">{item.text}</p>
+          </div>
+        ))}
+
+        <div className="prophet-cta">
+          <p className="prophet-cta-text">
+            Understanding Prophet Muhammad's life helps us understand one of the world's major faiths 
+            and the civilization it inspired. Continue exploring to learn more.
+          </p>
+          <div className="prophet-cta-links">
+            <Link to="/fundamentals" className="prophet-cta-link">
+              <span>📚</span> Islam Fundamentals
+            </Link>
+            <Link to="/quran" className="prophet-cta-link">
+              <span>📖</span> The Qur'an
+            </Link>
+            <Link to="/qa" className="prophet-cta-link">
+              <span>❓</span> Questions & Answers
+            </Link>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   )
 }
@@ -1848,43 +2115,19 @@ function FundamentalsSection() {
 
   const fundamentalsInfo = {
     what: {
-      title: "What Exactly is Islam?",
+      title: "What is Islam?",
       content: [
         {
-          heading: "The Meaning of Islam",
-          text: "Islam is an Arabic word that means 'submission' or 'surrender' to the will of God. A Muslim is someone who submits to God's will and follows His guidance. Islam is not a new religion but rather the original monotheistic faith that has been taught by all prophets from the beginning of human history."
+          heading: "A Simple Beginning",
+          text: "Islam is a monotheistic faith centered on belief in one God and living with purpose and moral responsibility. The word 'Islam' means submitting to God's will - not to people, culture, or institutions. It's a way of life followed by people from every background, not tied to any ethnicity or geography."
         },
         {
-          heading: "Core Beliefs",
-          text: "Islam is built on six core beliefs known as the Articles of Faith: 1) Belief in One God who created everything, 2) Belief in angels as spiritual beings who serve God, 3) Belief in revealed books that God sent to guide humanity, 4) Belief in prophets who delivered God's message, 5) Belief in the Day of Judgment when everyone will be held accountable for their actions, and 6) Belief in God's divine wisdom and plan."
+          heading: "Life Has Purpose",
+          text: "Islam views life as intentional rather than random. Human beings are accountable for their choices, and how we live matters. This sense of purpose gives meaning to everyday actions and decisions."
         },
         {
-          heading: "The Prophets",
-          text: "Muslims believe that God sent prophets to guide humanity throughout history. These include Adam, Noah, Abraham, Moses, David, Solomon, John the Baptist, and Jesus, among many others. Prophet Muhammad (peace be upon him) was the final prophet who brought the complete and final message. All prophets taught the same core message: worship One God and live righteously."
-        },
-        {
-          heading: "Why Muslims Use the Quran",
-          text: "Muslims follow the Quran because they believe it is the final, complete, and preserved word of God. The Quran was revealed to Prophet Muhammad (peace be upon him) over 23 years and has remained unchanged for over 1,400 years. Unlike other religious texts that may have been altered or lost over time, the Quran has been preserved in its original form through memorization and written records."
-        },
-        {
-          heading: "Belief in Previous Scriptures",
-          text: "Muslims believe in the original scriptures that were revealed before the Quran, including the Torah given to Moses, the Psalms given to David, and the Gospel given to Jesus. However, Muslims believe that these original texts have been changed, altered, or lost over time through human intervention. The Quran is the only scripture that has been preserved in its original, complete form."
-        },
-        {
-          heading: "A Complete Way of Life",
-          text: "Islam is more than just a religion - it's a complete way of life that provides guidance for all aspects of human existence: spiritual, moral, social, economic, and political. The Quran and the teachings of Prophet Muhammad (peace be upon him) offer comprehensive guidance for living a balanced, purposeful life."
-        },
-        {
-          heading: "Peace and Mercy",
-          text: "The word 'Islam' comes from the same root as the word for 'peace.' Islam teaches peace, mercy, and compassion. The greeting among Muslims is 'Peace be upon you.' God is described as 'The Most Merciful' and 'The Most Compassionate.' These qualities are central to Islamic teachings."
-        },
-        {
-          heading: "Universal Message",
-          text: "Islam is a universal message for all of humanity, not limited to any particular race, ethnicity, or culture. People from every background have embraced Islam throughout history. The message addresses all of humanity, inviting everyone to worship One God and live a righteous life."
-        },
-        {
-          heading: "Purpose of Life",
-          text: "Islam teaches that the purpose of human life is to worship God and live according to His guidance. This worship includes prayer, but also encompasses all good deeds, kindness to others, and fulfilling one's responsibilities. Life is seen as a test, and how we live determines our eternal destiny."
+          heading: "A Message for Everyone",
+          text: "Islam's message is universal - it's for all people, regardless of background. The teachings address fundamental questions about why we're here and how to live well together."
         }
       ]
     },
@@ -1892,300 +2135,188 @@ function FundamentalsSection() {
       title: "Who is Allah?",
       content: [
         {
-          heading: "Allah is the Arabic Word for God",
-          text: "Allah is simply the Arabic word for 'God.' Arab Christians and Arab Jews also use the word 'Allah' when referring to God in their Arabic Bibles and religious texts. It's not a different deity - it's the same God worshipped by Jews, Christians, and Muslims.",
-          verse: "And your God is one God. There is no deity [worthy of worship] except Him, the Entirely Merciful, the Especially Merciful.",
-          reference: "Quran 2:163"
+          heading: "Allah Means 'The One God'",
+          text: "Allah is simply the Arabic word for 'The One God.' It's the same God worshipped by Abraham, Moses, and Jesus. Arab Christians and Jews also use this word when referring to God in their prayers and scriptures."
         },
         {
-          heading: "The Same God as Abraham, Moses, and Jesus",
-          text: "Muslims worship the same One God that Jews and Christians worship - the God of Abraham, Moses, Jesus, and all the prophets (peace be upon them). Islam is a continuation of the same monotheistic tradition.",
-          verse: "Say, 'He is Allah, [who is] One, Allah, the Eternal Refuge. He neither begets nor is born, nor is there to Him any equivalent.'",
-          reference: "Quran 112:1-4"
+          heading: "One, Unique, and Eternal",
+          text: "God is described as one, unique, eternal, and merciful. There is nothing like God, and God has no partners, children, or equals. This simple understanding of God's oneness is at the heart of Islam."
         },
         {
-          heading: "Pure Monotheism (Tawhid)",
-          text: "The central concept in Islam is Tawhid - the absolute oneness of God. God has no partners, no children, no equals, and is unlike His creation. God is self-sufficient, eternal, and all-powerful. Worship is due only to God alone.",
-          verse: "There is nothing like unto Him, and He is the Hearing, the Seeing.",
-          reference: "Quran 42:11"
-        },
-        {
-          heading: "God's Names and Attributes",
-          text: "The Quran mentions 99 names of God, each describing a different aspect of His nature. These include: The Most Merciful (Ar-Rahman), The Most Compassionate (Ar-Rahim), The King (Al-Malik), The All-Knowing (Al-Alim), The All-Wise (Al-Hakim), The Loving (Al-Wadud), and The Forgiving (Al-Ghafur).",
-          verse: "And to Allah belong the best names, so invoke Him by them.",
-          reference: "Quran 7:180"
-        },
-        {
-          heading: "God is Close to Us",
-          text: "While God is transcendent and beyond human comprehension, He is also close to His creation. The Quran says God is closer to us than our jugular vein. God hears our prayers, knows our thoughts, and is always accessible to those who seek Him.",
-          verse: "And when My servants ask you, [O Muhammad], concerning Me - indeed I am near. I respond to the invocation of the supplicant when he calls upon Me.",
-          reference: "Quran 2:186"
-        },
-        {
-          heading: "God's Mercy and Justice",
-          text: "God is both merciful and just. His mercy encompasses all things, and He forgives those who sincerely repent. At the same time, God is just and will hold everyone accountable for their actions. The balance between mercy and justice is a central theme in Islam.",
-          verse: "My mercy encompasses all things.",
-          reference: "Quran 7:156"
+          heading: "Always Close",
+          text: "While God is beyond full human understanding, God is also close to us - closer than our own heartbeat. God hears our prayers, knows our thoughts, and is always accessible to those who seek connection."
         }
       ]
     },
     muhammad: {
-      title: "Who is Prophet Muhammad (PBUH)?",
+      title: "Prophet Muhammad",
       content: [
         {
           heading: "The Final Messenger",
-          text: "Prophet Muhammad (peace be upon him) is the final prophet in a long line of prophets that includes Adam, Noah, Abraham, Moses, and Jesus (peace be upon them all). He was born in Mecca in 570 CE and received the first revelation at age 40. He is not the founder of Islam but its final messenger.",
-          verse: "Muhammad is not the father of [any] one of your men, but [he is] the Messenger of Allah and last of the prophets.",
-          reference: "Quran 33:40"
+          text: "Prophet Muhammad (peace be upon him) was the final prophet in a long line of messengers sent by God. He was born in Mecca in 570 CE and received the first revelation at age 40. He continued the same message that previous prophets brought."
         },
         {
-          heading: "His Character",
-          text: "Even before prophethood, Muhammad (PBUH) was known as 'Al-Amin' (The Trustworthy) for his honesty and integrity. He was kind, humble, patient, and just. His wife Khadijah described him as one who maintained family ties, helped the poor, was hospitable to guests, and assisted those in distress.",
-          verse: "And indeed, you are of a great moral character.",
-          reference: "Quran 68:4"
+          heading: "A Life of Character",
+          text: "Even before prophethood, Muhammad was known as 'Al-Amin' (The Trustworthy) for his honesty and integrity. He was kind, humble, patient, and just. His life serves as a practical example of how to live the teachings."
         },
         {
-          heading: "His Message",
-          text: "Muhammad (PBUH) brought the same core message as all prophets: worship One God, live righteously, and prepare for the Hereafter. He taught justice, compassion, mercy, and the importance of treating others with kindness and respect.",
-          verse: "Say, [O Muhammad], 'O mankind, indeed I am the Messenger of Allah to you all, [from Him] to whom belongs the dominion of the heavens and the earth.'",
-          reference: "Quran 7:158"
+          heading: "Not Divine, But Deeply Respected",
+          text: "Muslims do not worship Muhammad or consider him divine. He was a human being, a prophet and messenger of God. Muslims love and respect him deeply, but worship is due only to God alone."
+        }
+      ]
+    },
+    quran: {
+      title: "The Qur'an",
+      content: [
+        {
+          heading: "Divine Guidance",
+          text: "The Qur'an is the central text of Islam, believed by Muslims to be God's word revealed to Prophet Muhammad over 23 years. It addresses belief, ethics, and daily life, offering guidance for living well."
         },
         {
-          heading: "His Life and Teachings",
-          text: "The Prophet's life (Sunnah) serves as a practical example for Muslims. His teachings cover all aspects of life: prayer, fasting, charity, family life, business ethics, social justice, and more. Muslims strive to follow his example in their daily lives.",
-          verse: "There has certainly been for you in the Messenger of Allah an excellent pattern for anyone whose hope is in Allah and the Last Day and [who] remembers Allah often.",
-          reference: "Quran 33:21"
+          heading: "Preserved and Accessible",
+          text: "The Qur'an has been preserved in its original form for over 1,400 years. It's memorized by millions of people and written in books, making it accessible to anyone who wants to read and understand it."
         },
         {
-          heading: "Not Divine",
-          text: "Muslims do not worship Muhammad (PBUH) or consider him divine. He was a human being, a prophet and messenger of God. Muslims love and respect him deeply, but worship is due only to God.",
-          verse: "Say, 'I am only a man like you, to whom has been revealed that your god is one God.'",
-          reference: "Quran 18:110"
+          heading: "A Book for All Times",
+          text: "The Qur'an's teachings are timeless and applicable to all eras. It speaks to universal human experiences - hope, struggle, justice, compassion, and the search for meaning."
+        }
+      ]
+    },
+    prophets: {
+      title: "The Prophets",
+      content: [
+        {
+          heading: "Teachers Throughout History",
+          text: "Islam teaches that God sent prophets throughout history to guide humanity. These were moral teachers who reminded people of what matters most: kindness, justice, and connection with God."
         },
         {
-          heading: "His Legacy",
-          text: "In just 23 years, Muhammad (PBUH) transformed Arabia from a land of tribal warfare and injustice into a unified, just society. His teachings continue to guide over 1.8 billion Muslims worldwide. He is considered the most influential person in history by many scholars.",
-          verse: "And We have not sent you but as a mercy to the worlds.",
-          reference: "Quran 21:107"
+          heading: "Familiar Names",
+          text: "Many prophets are well-known figures: Adam, Noah, Abraham, Moses, David, Solomon, John the Baptist, and Jesus (peace be upon them all). They all taught the same core message: worship One God and live righteously."
+        },
+        {
+          heading: "A Continuous Line of Guidance",
+          text: "Islam sees itself as part of this continuous line of guidance. Prophet Muhammad brought the final, complete message, but he was continuing what had been taught before, not creating something entirely new."
+        }
+      ]
+    },
+    beliefs: {
+      title: "Core Beliefs",
+      content: [
+        {
+          heading: "Belief in God",
+          text: "Muslims believe in one God who created everything and is worthy of worship. This belief shapes how Muslims see the world and their place in it."
+        },
+        {
+          heading: "Belief in Guidance",
+          text: "God has provided guidance through prophets and scriptures. This guidance helps humans understand right from wrong and live meaningful lives."
+        },
+        {
+          heading: "Belief in Accountability",
+          text: "Life is seen as a test, and humans are accountable for their choices. This belief encourages responsibility and mindfulness in daily actions."
+        },
+        {
+          heading: "Belief in Justice",
+          text: "God is just and will judge everyone fairly. This belief provides comfort that wrongs will be righted and that justice ultimately prevails."
         }
       ]
     },
     pillars: {
-      title: "The Five Pillars of Islam",
+      title: "The Five Pillars",
       content: [
         {
-          heading: "1. Shahada (Declaration of Faith)",
-          text: "The Shahada is the testimony of faith: 'There is no god but Allah, and Muhammad is the Messenger of Allah.' This simple declaration, when said with sincerity, makes one a Muslim. It expresses the core belief in one God and the prophethood of Muhammad (PBUH).",
-          verse: "Allah witnesses that there is no deity except Him, and [so do] the angels and those of knowledge - [that He is] maintaining [creation] in justice.",
-          reference: "Quran 3:18"
+          heading: "Practical Expressions of Faith",
+          text: "The Five Pillars are not rigid rules but practical habits that structure a Muslim's life around reflection, self-discipline, generosity, and community. They're ways to live out belief in everyday life."
         },
         {
-          heading: "2. Salah (Prayer)",
-          text: "Muslims perform five daily prayers at specific times: before dawn (Fajr), midday (Dhuhr), afternoon (Asr), sunset (Maghrib), and evening (Isha). Prayer is a direct connection with God, providing spiritual nourishment and reminding Muslims of their purpose throughout the day.",
-          verse: "Indeed, prayer has been decreed upon the believers at specified times.",
-          reference: "Quran 4:103"
+          heading: "1. Declaration of Faith (Shahada)",
+          text: "Saying 'There is no god but God, and Muhammad is God's messenger' with sincerity makes one a Muslim. It's a simple statement that expresses the core belief."
         },
         {
-          heading: "3. Zakat (Charity)",
-          text: "Zakat is obligatory charity, typically 2.5% of one's accumulated wealth annually. It purifies wealth, helps those in need, and creates social balance. Zakat is given to the poor, needy, debtors, travelers, and other specified categories.",
-          verse: "And establish prayer and give zakat.",
-          reference: "Quran 2:43"
+          heading: "2. Prayer (Salah)",
+          text: "Five daily prayers at specific times provide regular moments of connection with God. They're like spiritual breaks that remind Muslims of what matters most."
         },
         {
-          heading: "4. Sawm (Fasting in Ramadan)",
-          text: "Muslims fast from dawn to sunset during the month of Ramadan, abstaining from food, drink, and other physical needs. Fasting develops self-discipline, empathy for the poor, and spiritual awareness. It's a time for increased prayer, Quran reading, and reflection.",
-          verse: "O you who have believed, decreed upon you is fasting as it was decreed upon those before you that you may become righteous.",
-          reference: "Quran 2:183"
+          heading: "3. Charity (Zakat)",
+          text: "Giving a portion of wealth to those in need purifies the heart and helps society. It's a reminder that everything we have is a gift to be shared."
         },
         {
-          heading: "5. Hajj (Pilgrimage)",
-          text: "Hajj is the pilgrimage to Mecca, required once in a lifetime for those who are physically and financially able. It takes place during the Islamic month of Dhul-Hijjah. Pilgrims perform specific rituals commemorating the trials of Prophet Abraham and his family.",
-          verse: "And [due] to Allah from the people is a pilgrimage to the House - for whoever is able to find thereto a way.",
-          reference: "Quran 3:97"
+          heading: "4. Fasting (Ramadan)",
+          text: "Fasting from dawn to sunset for one month develops self-discipline and empathy for those who are hungry. It's a time for reflection and spiritual growth."
         },
         {
-          heading: "The Foundation of Muslim Life",
-          text: "These five pillars form the foundation of a Muslim's faith and practice. They provide structure, spiritual discipline, and a framework for living a righteous life. Together, they help Muslims maintain their connection with God and fulfill their responsibilities to society.",
-          verse: "The Messenger of Allah said: 'Islam is built upon five: testifying that there is none worthy of worship except Allah and that Muhammad is the Messenger of Allah, establishing prayer, paying zakat, performing Hajj, and fasting Ramadan.'",
-          reference: "Sahih Bukhari & Muslim"
+          heading: "5. Pilgrimage (Hajj)",
+          text: "A journey to Mecca once in a lifetime (for those able) brings Muslims from around the world together in unity and equality."
         }
       ]
     },
-    keypoints: {
-      title: "Key Points and Focuses in Islam",
+    meaning: {
+      title: "The Meaning of Life",
       content: [
         {
-          heading: "Tawhid (Monotheism)",
-          text: "The most important concept in Islam is Tawhid - the absolute oneness of God. All Islamic teachings revolve around this principle. Worship, obedience, and devotion are due only to God alone.",
-          verse: "And your god is one God. There is no deity [worthy of worship] except Him, the Entirely Merciful, the Especially Merciful.",
-          reference: "Quran 2:163"
+          heading: "Life Has Purpose",
+          text: "Islam teaches that life is not random or meaningless. Human beings were created intentionally, with purpose and dignity. This understanding gives weight to our choices and actions - they matter because we matter."
         },
         {
-          heading: "Akhirah (The Hereafter)",
-          text: "Islam teaches that this life is a test and that there will be an afterlife where everyone will be judged based on their deeds. Belief in the Day of Judgment motivates Muslims to live righteously and be accountable for their actions.",
-          verse: "And fear a Day when you will be returned to Allah. Then every soul will be compensated for what it earned, and they will not be treated unjustly.",
-          reference: "Quran 2:281"
+          heading: "Moral Accountability",
+          text: "Humans are morally accountable beings. We have the capacity to choose between right and wrong, and our choices have consequences. This accountability is not a burden but a sign of our dignity - we are responsible because we are capable of responsibility."
         },
         {
-          heading: "Adl (Justice)",
-          text: "Justice is a fundamental principle in Islam. Muslims are commanded to be just, even against themselves or their families. The Quran emphasizes standing up for justice and opposing oppression.",
-          verse: "O you who have believed, be persistently standing firm for Allah, witnesses in justice, and do not let the hatred of a people prevent you from being just.",
-          reference: "Quran 5:8"
+          heading: "Free Will with Responsibility",
+          text: "We have the freedom to choose our path, but this freedom comes with responsibility. We are not robots programmed to act in certain ways, nor are we helpless victims of circumstance. Our choices shape who we become and what we contribute to the world."
         },
         {
-          heading: "Rahmah (Mercy and Compassion)",
-          text: "Mercy and compassion are central to Islam. God is described as 'The Most Merciful,' and Muslims are encouraged to be merciful to others. Kindness to family, neighbors, animals, and all creation is emphasized.",
-          verse: "And We have not sent you, [O Muhammad], except as a mercy to the worlds.",
-          reference: "Quran 21:107"
+          heading: "Justice Beyond This Life",
+          text: "Life is not always fair in this world, but Islam teaches that ultimate justice exists beyond it. Wrongs will be righted, and everyone will receive what they deserve. This belief provides comfort to those who suffer and hope that justice ultimately prevails."
         },
         {
-          heading: "Sabr (Patience)",
-          text: "Patience is highly valued in Islam. Muslims are taught to be patient in facing difficulties, in avoiding sins, and in performing good deeds. Patience is mentioned throughout the Quran as a virtue of the righteous.",
-          verse: "And be patient, [O Muhammad], and your patience is not but through Allah.",
-          reference: "Quran 16:127"
+          heading: "Suffering Has Purpose",
+          text: "Hardship and suffering are not meaningless chaos. They can be opportunities for growth, for developing patience and resilience, for deepening empathy, and for drawing closer to God. This doesn't mean suffering is good, but that it can be meaningful."
         },
         {
-          heading: "Shukr (Gratitude)",
-          text: "Gratitude to God is essential in Islam. Muslims are encouraged to be thankful for all blessings, big and small. Gratitude is expressed through prayer, charity, and using blessings in ways that please God.",
-          verse: "And if you should count the favors of Allah, you could not enumerate them.",
-          reference: "Quran 14:34"
-        },
-        {
-          heading: "Ihsan (Excellence)",
-          text: "Ihsan means doing things with excellence and sincerity. It includes worshipping God as if you see Him, being kind to others, and striving for excellence in all aspects of life.",
-          verse: "Indeed, Allah is with those who fear Him and those who are doers of good.",
-          reference: "Quran 16:128"
-        },
-        {
-          heading: "Ummah (Community)",
-          text: "The concept of Ummah emphasizes the unity of all Muslims regardless of race, ethnicity, or nationality. Muslims are brothers and sisters in faith, supporting and caring for one another.",
-          verse: "The believers are but brothers.",
-          reference: "Quran 49:10"
+          heading: "Belief and Action Are Connected",
+          text: "What we believe shapes how we act, and how we act reflects what we truly believe. Faith is not just in the mind or heart - it's lived out through our choices, our relationships, and our treatment of others."
         }
       ]
     },
     modern: {
-      title: "Islam and Modern Life",
+      title: "Islam in Modern Life",
       content: [
         {
-          heading: "Compatible with Modern Life",
-          text: "Islam is fully compatible with modern life. Its teachings are timeless and applicable to all eras. Muslims around the world successfully balance their faith with modern careers, education, technology, and contemporary lifestyles.",
-          verse: "We have not sent you, [O Muhammad], except as a mercy to the worlds.",
-          reference: "Quran 21:107"
+          heading: "Living Normal Lives",
+          text: "Muslims live normal contemporary lives - working, studying, raising families, and contributing to society. Islamic teachings guide how to do these things well, not whether to do them at all."
         },
         {
-          heading: "Science and Knowledge",
-          text: "Islam encourages the pursuit of knowledge and scientific discovery. The Quran repeatedly encourages reflection, observation, and learning. Many of the world's greatest scientific advances came from Muslim scholars during the Islamic Golden Age.",
-          verse: "Read in the name of your Lord who created.",
-          reference: "Quran 96:1"
+          heading: "Balancing Faith and Modernity",
+          text: "Islam is fully compatible with modern life. Muslims around the world successfully balance their faith with modern careers, education, technology, and contemporary lifestyles."
         },
         {
-          heading: "Women's Rights",
-          text: "Islam granted women rights 1400 years ago that were revolutionary for that time, including the right to own property, inherit, choose their spouse, receive education, and divorce. Modern Muslim women are professionals, scholars, leaders, and contributors to society.",
-          verse: "And for women are rights over men similar to those of men over women.",
-          reference: "Quran 2:228"
+          heading: "Ethics in Everyday Life",
+          text: "Islamic principles guide business ethics, family relationships, and social interactions. They emphasize honesty, fairness, kindness, and respect for others."
         },
         {
-          heading: "Work and Business",
-          text: "Islam encourages honest work and ethical business practices. Muslims are encouraged to excel in their professions and contribute positively to society. Islamic principles guide business ethics, prohibiting fraud, exploitation, and usury.",
-          verse: "O you who have believed, do not consume one another's wealth unjustly but only [in lawful] business by mutual consent.",
-          reference: "Quran 4:29"
-        },
-        {
-          heading: "Technology and Innovation",
-          text: "Islam embraces beneficial technology and innovation. Muslims use modern technology for education, communication, healthcare, and improving quality of life. The key is using technology in ways that align with Islamic values.",
-          verse: "And He has subjected for you whatever is in the heavens and whatever is on the earth - all from Him.",
-          reference: "Quran 45:13"
-        },
-        {
-          heading: "Environmental Stewardship",
-          text: "Islam teaches responsibility toward the environment. Muslims are commanded to avoid waste, protect natural resources, and care for animals and plants. These teachings are highly relevant to modern environmental concerns.",
-          verse: "And cause not corruption upon the earth after its reformation.",
-          reference: "Quran 7:56"
-        },
-        {
-          heading: "Mental Health",
-          text: "Islamic teachings address mental health through prayer, mindfulness, gratitude, trust in God, and community support. The Quran provides comfort and guidance for dealing with anxiety, stress, and depression.",
-          verse: "Indeed, with hardship [will be] ease.",
-          reference: "Quran 94:5-6"
-        },
-        {
-          heading: "Social Justice",
-          text: "Islam's emphasis on justice, equality, and caring for the poor is highly relevant to modern social issues. Muslims are encouraged to work for social justice, human rights, and the welfare of all members of society.",
-          verse: "O you who have believed, be persistently standing firm for Allah, witnesses in justice.",
-          reference: "Quran 5:8"
-        }
-      ]
-    },
-    practices: {
-      title: "Islamic Practices Explained",
-      content: [
-        {
-          heading: "Hijab (Modest Dress)",
-          text: "Hijab is the practice of modest dress and behavior. For women, it typically includes covering the hair and body, while men are also commanded to dress modestly. Hijab is a personal choice and an act of worship, representing devotion to God and focusing on character over appearance.",
-          verse: "And tell the believing women to lower their gaze and guard their private parts and not display their adornment except that which [necessarily] appears thereof.",
-          reference: "Quran 24:31"
-        },
-        {
-          heading: "Prayer (Salah)",
-          text: "The five daily prayers are performed at specific times: Fajr (before dawn), Dhuhr (midday), Asr (afternoon), Maghrib (sunset), and Isha (evening). Each prayer includes recitations from the Quran, bowing, and prostration. Prayer can be performed anywhere clean, though congregational prayer at the mosque is encouraged.",
-          verse: "Indeed, prayer has been decreed upon the believers at specified times.",
-          reference: "Quran 4:103"
-        },
-        {
-          heading: "Fasting (Sawm)",
-          text: "Muslims fast during Ramadan from dawn to sunset, abstaining from food, drink, and other physical needs. Fasting develops self-discipline, spiritual awareness, and empathy for the poor. The fast is broken at sunset with dates and water, followed by a meal. Those who are ill, traveling, pregnant, or elderly are exempt.",
-          verse: "O you who have believed, decreed upon you is fasting as it was decreed upon those before you that you may become righteous.",
-          reference: "Quran 2:183"
-        },
-        {
-          heading: "Halal (Permissible)",
-          text: "Halal means 'permissible' and applies to all aspects of life. In food, halal includes meat from animals slaughtered according to Islamic guidelines, and excludes pork and blood. Halal also applies to earnings, business, relationships, and behavior - everything should be lawful and ethical.",
-          verse: "O you who have believed, eat from the good things which We have provided for you.",
-          reference: "Quran 2:172"
-        },
-        {
-          heading: "Charity (Zakat and Sadaqah)",
-          text: "Zakat is obligatory charity (2.5% of annual wealth), while Sadaqah is voluntary charity. Both purify wealth, help those in need, and create social balance. Charity can be given to the poor, needy, orphans, travelers, and for community projects.",
-          verse: "And establish prayer and give zakat.",
-          reference: "Quran 2:43"
-        },
-        {
-          heading: "Pilgrimage (Hajj)",
-          text: "Hajj is the pilgrimage to Mecca, required once in a lifetime for those able. Pilgrims wear simple white garments (Ihram), symbolizing equality before God. They perform rituals including circling the Kaaba, praying at Mount Arafat, and throwing pebbles at pillars representing evil.",
-          verse: "And [due] to Allah from the people is a pilgrimage to the House - for whoever is able to find thereto a way.",
-          reference: "Quran 3:97"
-        },
-        {
-          heading: "Friday Prayer (Jumu'ah)",
-          text: "Muslims attend congregational prayer at the mosque on Friday afternoon. The prayer includes a sermon (khutbah) that addresses religious, social, and moral issues. Friday is considered a special day for community gathering and spiritual renewal.",
-          verse: "O you who have believed, when [the adhan] is called for the prayer on the day of Jumu'ah [Friday], then proceed to the remembrance of Allah.",
-          reference: "Quran 62:9"
-        },
-        {
-          heading: "Daily Supplications (Dua)",
-          text: "Dua is personal prayer and supplication to God. Muslims make dua throughout the day - upon waking, before eating, after prayer, before sleep, and at any time. Dua is a direct conversation with God, expressing needs, gratitude, and seeking guidance.",
-          verse: "And when My servants ask you, [O Muhammad], concerning Me - indeed I am near. I respond to the invocation of the supplicant when he calls upon Me.",
-          reference: "Quran 2:186"
+          heading: "Contributing to Society",
+          text: "Muslims are encouraged to work for the common good - fighting poverty, promoting education, protecting human rights, and building peaceful communities."
         }
       ]
     }
   }
 
   const sections = [
-    { id: 'what', name: 'What is Islam?', icon: '🕌' },
-    { id: 'allah', name: 'Who is Allah?', icon: '✨' },
+    { id: 'what', name: 'What is Islam?', icon: '💡' },
+    { id: 'allah', name: 'Who is Allah?', icon: '⭐' },
+    { id: 'prophets', name: 'The Prophets', icon: '👥' },
     { id: 'muhammad', name: 'Prophet Muhammad', icon: '👤' },
-    { id: 'pillars', name: 'Five Pillars', icon: '📿' },
-    { id: 'keypoints', name: 'Key Points', icon: '🎯' },
-    { id: 'modern', name: 'Modern Life', icon: '🌍' },
-    { id: 'practices', name: 'Practices', icon: '🙏' }
+    { id: 'quran', name: 'The Qur\'an', icon: '📖' },
+    { id: 'beliefs', name: 'Core Beliefs', icon: '🎯' },
+    { id: 'pillars', name: 'Five Pillars', icon: '🏛️' },
+    { id: 'meaning', name: 'Meaning of Life', icon: '🌟' },
+    { id: 'modern', name: 'Modern Life', icon: '🌍' }
   ]
 
   return (
     <div className="section">
       <h2>Islam Fundamentals</h2>
-      <p>Learn the essential beliefs, practices, and teachings of Islam.</p>
+      <p>A simple introduction to what Muslims believe and why</p>
       
       <div className="quran-nav">
         {sections.map(section => (
@@ -2206,17 +2337,27 @@ function FundamentalsSection() {
         {fundamentalsInfo[activeSection].content.map((item, index) => (
           <div key={index} className="quran-item">
             <h4 className="quran-item-heading">{item.heading}</h4>
-            
-            {item.text && <p className="quran-item-text">{item.text}</p>}
-            
-            {item.verse && (
-              <div className="quran-verse-box">
-                <p className="quran-verse-text">"{item.verse}"</p>
-                <p className="quran-verse-ref">{item.reference}</p>
-              </div>
-            )}
+            <p className="quran-item-text">{item.text}</p>
           </div>
         ))}
+
+        <div className="fundamentals-cta">
+          <p className="fundamentals-cta-text">
+            Islam encourages reflection, questions, and understanding rather than blind acceptance. 
+            Take your time exploring, and feel free to learn at your own pace.
+          </p>
+          <div className="fundamentals-cta-links">
+            <Link to="/quran" className="fundamentals-cta-link">
+              <span>📖</span> Explore the Qur'an
+            </Link>
+            <Link to="/prophet" className="fundamentals-cta-link">
+              <span>👤</span> Prophet's Stories
+            </Link>
+            <Link to="/qa" className="fundamentals-cta-link">
+              <span>❓</span> Questions & Answers
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   )
@@ -2551,6 +2692,782 @@ function ReligionsSection() {
   )
 }
 
+function InteractiveRecitationPlayer({ surahInfo, audioUrl, verses }) {
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [currentTime, setCurrentTime] = useState(0)
+  const [currentVerse, setCurrentVerse] = useState(null)
+  const [expandedSurah, setExpandedSurah] = useState(null)
+  const [selectedCategory, setSelectedCategory] = useState('all')
+  const audioRef = useRef(null)
+
+  const categories = [
+    { id: 'all', name: 'All Surahs', icon: '📖' },
+    { id: 'creation', name: 'Creation & Signs', icon: '🌌' },
+    { id: 'mercy', name: 'Mercy & Comfort', icon: '💚' },
+    { id: 'repentance', name: 'Repentance & Forgiveness', icon: '🤲' },
+    { id: 'consciousness', name: 'Consciousness of Allah', icon: '🙏' },
+    { id: 'brotherhood', name: 'Brotherhood & Ethics', icon: '🤝' }
+  ]
+
+  const surahs = [
+    {
+      id: 1,
+      name: "Surah Al-Fatiha",
+      number: 1,
+      verses: 7,
+      meaning: "The Opening",
+      reciter: "Sheikh Maher Al-Muaiqly",
+      location: "Mecca",
+      summary: "The opening chapter of the Quran - a prayer for guidance, mercy, and the straight path",
+      category: 'mercy',
+      audioUrl: "https://www.youtube.com/watch?v=iuT39l0s1ew",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 1,
+          arabic: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+          transliteration: "Bismillaahir Rahmaanir Raheem",
+          translation: "In the name of Allah, the Most Gracious, the Most Merciful",
+          startTime: 0,
+          endTime: 3.2
+        },
+        {
+          number: 2,
+          arabic: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+          transliteration: "Alhamdu lillaahi Rabbil 'aalameen",
+          translation: "All praise is due to Allah, Lord of all the worlds",
+          startTime: 3.2,
+          endTime: 6.8
+        },
+        {
+          number: 3,
+          arabic: "الرَّحْمَٰنِ الرَّحِيمِ",
+          transliteration: "Ar-Rahmaanir-Raheem",
+          translation: "The Most Gracious, the Most Merciful",
+          startTime: 6.8,
+          endTime: 9.2
+        },
+        {
+          number: 4,
+          arabic: "مَالِكِ يَوْمِ الدِّينِ",
+          transliteration: "Maaliki Yawmid-Deen",
+          translation: "Master of the Day of Judgment",
+          startTime: 9.2,
+          endTime: 11.8
+        },
+        {
+          number: 5,
+          arabic: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ",
+          transliteration: "Iyyaaka na'budu wa lyyaaka nasta'een",
+          translation: "You alone we worship, and You alone we ask for help",
+          startTime: 11.8,
+          endTime: 16.2
+        },
+        {
+          number: 6,
+          arabic: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ",
+          transliteration: "Ihdinas-Siraatal-Mustaqeem",
+          translation: "Guide us on the Straight Path",
+          startTime: 16.2,
+          endTime: 19.5
+        },
+        {
+          number: 7,
+          arabic: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ",
+          transliteration: "Siraatal-lazeena an'amta 'alayhim ghayril-maghdoobi 'alayhim wa lad-daalleen",
+          translation: "The path of those upon whom You have bestowed favor, not of those who have evoked [Your] anger or of those who are astray",
+          startTime: 19.5,
+          endTime: 27.5
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: "Surah Al-Furqan (Verses 70-74)",
+      number: 25,
+      verses: 5,
+      meaning: "The Criterion",
+      reciter: "Qari Ibrahim Idris",
+      location: "Nigeria",
+      summary: "Verses on repentance, forgiveness, and the noble character of believers",
+      category: 'repentance',
+      audioUrl: "https://www.youtube.com/watch?v=w2xJqNqufg0",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 70,
+          arabic: "إِلَّا الَّذِينَ تَابُوا وَآمَنُوا وَعَمِلُوا صَالِحًا فَأُولَٰئِكَ يُبَدِّلُ اللَّهُ سَيِّئَاتِهِمْ حَسَنَاتٍ",
+          transliteration: "Illallazeena taaboo wa aamanoo wa 'amiloo saalihan fa ulaa'ika yubaddilullaahu sayyi'aatihim hasanaat",
+          translation: "Except for those who repent, believe and do righteous work; for them Allah will replace their evil deeds with good",
+          startTime: 0,
+          endTime: 8
+        },
+        {
+          number: 71,
+          arabic: "وَكَانَ اللَّهُ غَفُورًا رَّحِيمًا",
+          transliteration: "Wa kaanallaahu ghafuuran raheema",
+          translation: "And ever is Allah Forgiving and Merciful",
+          startTime: 8,
+          endTime: 12
+        },
+        {
+          number: 72,
+          arabic: "وَمَن تَابَ وَعَمِلَ صَالِحًا فَإِنَّهُ يَتُوبُ إِلَى اللَّهِ تَوْبًا",
+          transliteration: "Wa man taaba wa 'amila saalihan fa innahu yatoobu ilallaahi tawba",
+          translation: "And he who repents and does righteousness does indeed turn to Allah with [accepted] repentance",
+          startTime: 12,
+          endTime: 18
+        },
+        {
+          number: 73,
+          arabic: "وَالَّذِينَ لَا يَشْهَدُونَ الزُّورَ وَإِذَا مَرُّوا بِاللَّغْوِ مَرُّوا كِرَامًا",
+          transliteration: "Wallazeena laa yash-hadoonaz-zoor wa izaa marroo bil-laghwi marroo kiraama",
+          translation: "And those who do not testify to falsehood, and when they pass near ill speech, they pass by with dignity",
+          startTime: 18,
+          endTime: 26
+        },
+        {
+          number: 74,
+          arabic: "وَالَّذِينَ إِذَا ذُكِّرُوا بِآيَاتِ رَبِّهِمْ لَمْ يَخِرُّوا عَلَيْهَا صُمًّا وَعُمْيَانًا",
+          transliteration: "Wallazeena izaa zukkiru bi aayaati rabbihim lam yahirru 'alayha summan wa 'umyaana",
+          translation: "And those who, when reminded of the verses of their Lord, do not fall upon them deaf and blind",
+          startTime: 26,
+          endTime: 35
+        }
+      ]
+    },
+    {
+      id: 3,
+      name: "Surah Al-Hashr (Verses 18-24)",
+      number: 59,
+      verses: 7,
+      meaning: "The Exile",
+      reciter: "Sheikh Murtada Bakour",
+      location: "Syria",
+      summary: "Verses on consciousness of Allah, accountability, and the greatness of the Quran",
+      category: 'consciousness',
+      audioUrl: "https://www.youtube.com/watch?v=99AAN23deec",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 18,
+          arabic: "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَلْتَنظُرْ نَفْسٌ مَّا قَدَّمَتْ لِغَدٍ",
+          transliteration: "Yaa ayyuhal-lazeena aamanut-taqullaaha wa l-tanzur nafsun maa qaddamat lighadin",
+          translation: "O you who have believed, fear Allah. And let every soul look to what it has put forth for tomorrow",
+          startTime: 0,
+          endTime: 10
+        },
+        {
+          number: 19,
+          arabic: "وَاتَّقُوا اللَّهَ إِنَّ اللَّهَ خَبِيرٌ بِمَا تَعْمَلُونَ",
+          transliteration: "Wattaqullaaha innallaaha khabeerum bimaa ta'maloon",
+          translation: "And fear Allah. Indeed, Allah is Acquainted with what you do",
+          startTime: 10,
+          endTime: 16
+        },
+        {
+          number: 20,
+          arabic: "وَلَا تَكُونُوا كَالَّذِينَ نَسُوا اللَّهَ فَأَنسَاهُمْ أَنفُسَهُمْ",
+          transliteration: "Wa laa takoonoo kallazeena nasullaahu fa ansaahum anfusahum",
+          translation: "And be not like those who forgot Allah, so He made them forget themselves",
+          startTime: 16,
+          endTime: 24
+        },
+        {
+          number: 21,
+          arabic: "أُولَٰئِكَ هُمُ الْفَاسِقُونَ",
+          transliteration: "Ulaa'ika humul-faasiqoon",
+          translation: "Those are the defiantly disobedient",
+          startTime: 24,
+          endTime: 28
+        },
+        {
+          number: 22,
+          arabic: "لَا يَسْتَوِي أَصْحَابُ النَّارِ وَأَصْحَابُ الْجَنَّةِ",
+          transliteration: "Laa yastawee ashaabun-naari wa ashaabul-jannah",
+          translation: "Not equal are the companions of the Fire and the companions of Paradise",
+          startTime: 28,
+          endTime: 35
+        },
+        {
+          number: 23,
+          arabic: "أَصْحَابُ الْجَنَّةِ هُمُ الْفَائِزُونَ",
+          transliteration: "Ashaabul-jannah humul-faa'izoon",
+          translation: "The companions of Paradise - they are the attainers [of success]",
+          startTime: 35,
+          endTime: 40
+        },
+        {
+          number: 24,
+          arabic: "لَوْ أَنزَلْنَا هَٰذَا الْقُرْآنَ عَلَىٰ جَبَلٍ لَّرَأَيْتَهُ خَاشِعًا مُّتَصَدِّعًا مِّنْ خَشْيَةِ اللَّهِ",
+          transliteration: "Law anzalna haazal-qur'aana 'alaa jabalin lara-aytahu khashi'an mutasaddi'an min khashyatillaah",
+          translation: "If We had sent down this Quran upon a mountain, you would have seen it humbled and coming apart from fear of Allah",
+          startTime: 40,
+          endTime: 52
+        }
+      ]
+    },
+    {
+      id: 4,
+      name: "Surah Al-Hujurat (Verses 10-13)",
+      number: 49,
+      verses: 4,
+      meaning: "The Rooms",
+      reciter: "Sheikh Abdul Rahman Al-Sudais",
+      location: "Saudi Arabia",
+      summary: "Verses on brotherhood, respect, avoiding mockery, and the diversity of humanity",
+      category: 'brotherhood',
+      audioUrl: "https://www.youtube.com/watch?v=Te8KhvlS58I",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 10,
+          arabic: "إِنَّمَا الْمُؤْمِنُونَ إِخْوَةٌ فَأَصْلِحُوا بَيْنَ أَخَوَيْكُمْ",
+          transliteration: "Innamal-mu'minoona ikhwatun fa aslihoo bayna akhaykum",
+          translation: "The believers are but brothers, so make settlement between your brothers",
+          startTime: 0,
+          endTime: 6
+        },
+        {
+          number: 11,
+          arabic: "يَا أَيُّهَا الَّذِينَ آمَنُوا لَا يَسْخَرْ قَوْمٌ مِّن قَوْمٍ عَسَىٰ أَن يَكُونُوا خَيْرًا مِّنْهُمْ",
+          transliteration: "Yaa ayyuhal-lazeena aamanoo laa yaskhar qawmun min qawmin 'asaa an yakoonoo khayran minhum",
+          translation: "O you who have believed, let not a people ridicule [another] people; perhaps they may be better than them",
+          startTime: 6,
+          endTime: 14
+        },
+        {
+          number: 12,
+          arabic: "وَلَا تَلْمِزُوا أَنفُسَكُمْ وَلَا تَنَابَزُوا بِالْأَلْقَابِ",
+          transliteration: "Wa laa talmizoo anfusakum wa laa tanaazawoo bil-alqaab",
+          translation: "And do not insult one another and do not call each other by [offensive] nicknames",
+          startTime: 14,
+          endTime: 22
+        },
+        {
+          number: 13,
+          arabic: "يَا أَيُّهَا النَّاسُ إِنَّا خَلَقْنَاكُم مِّن ذَكَرٍ وَأُنثَىٰ وَجَعَلْنَاكُمْ شُعُوبًا وَقَبَائِلَ لِتَعَارَفُوا",
+          transliteration: "Yaa ayyuhan-naasu inna khalaqnaakum min zakarin wa unthaa wa ja'alnaakum shu'ooban wa qabaa'ila lita'aarafoo",
+          translation: "O mankind, indeed We have created you from male and female and made you peoples and tribes that you may know one another",
+          startTime: 22,
+          endTime: 32
+        }
+      ]
+    },
+    {
+      id: 5,
+      name: "Surah Al-Anbiyaa (Verses 30-35)",
+      number: 21,
+      verses: 6,
+      meaning: "The Prophets",
+      reciter: "Sheikh Mishary Alafasy",
+      location: "Kuwait",
+      summary: "Verses on the creation of the universe, the origin of life, and signs of Allah",
+      category: 'creation',
+      audioUrl: "https://www.youtube.com/watch?v=iE1SycQkILk",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 30,
+          arabic: "أَوَلَمْ يَرَ الَّذِينَ كَفَرُوا أَنَّ السَّمَاوَاتِ وَالْأَرْضَ كَانَتَا رَتْقًا فَفَتَقْنَاهُمَا",
+          transliteration: "Awalam yal-lazeena kafaroo annas-samaawaati wal-arda kaanataa ratqan fa fataqnaahumaa",
+          translation: "Have those who disbelieved not considered that the heavens and the earth were a joined entity, and We separated them",
+          startTime: 0,
+          endTime: 10
+        },
+        {
+          number: 31,
+          arabic: "وَجَعَلْنَا مِنَ الْمَاءِ كُلَّ شَيْءٍ حَيٍّ",
+          transliteration: "Wa ja'alnaa minal-maa'i kulla shay'in hayy",
+          translation: "And We made from water every living thing",
+          startTime: 10,
+          endTime: 16
+        },
+        {
+          number: 32,
+          arabic: "وَجَعَلْنَا فِي الْأَرْضِ رَوَاسِيَ أَن تَمِيدَ بِهِمْ",
+          transliteration: "Wa ja'alnaa fil-ardi raasiya an tameeda bihim",
+          translation: "And We placed in the earth firmly set mountains, lest it should shift with them",
+          startTime: 16,
+          endTime: 24
+        },
+        {
+          number: 33,
+          arabic: "وَجَعَلْنَا فِيهَا فِجَاجًا سُبُلًا لَّعَلَّهُمْ يَهْتَدُونَ",
+          transliteration: "Wa ja'alnaa feehaa fijaajan subulan la'allahum yahtadoon",
+          translation: "And We made therein paths that they might be guided",
+          startTime: 24,
+          endTime: 32
+        },
+        {
+          number: 34,
+          arabic: "وَجَعَلْنَا السَّمَاءَ سَقْفًا مَّحْفُوظًا",
+          transliteration: "Wa ja'alnas-samaa'a saqfan mahfooza",
+          translation: "And We made the sky a protected ceiling",
+          startTime: 32,
+          endTime: 38
+        },
+        {
+          number: 35,
+          arabic: "وَهُمْ عَنْ آيَاتِهَا مُعْرِضُونَ",
+          transliteration: "Wa hum 'an aayaatihaa mu'ridoon",
+          translation: "And they, from its signs, are turning away",
+          startTime: 38,
+          endTime: 44
+        }
+      ]
+    },
+    {
+      id: 6,
+      name: "Surah At-Tur (Verses 35-37)",
+      number: 52,
+      verses: 3,
+      meaning: "The Mount",
+      reciter: "Sheikh Mishary Alafasy",
+      location: "Kuwait",
+      summary: "Verses questioning the origin of creation and the certainty of faith",
+      category: 'creation',
+      audioUrl: "https://www.youtube.com/watch?v=vgtLE4wWoYQ",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 35,
+          arabic: "أَمْ خُلِقُوا مِنْ غَيْرِ شَيْءٍ أَمْ هُمُ الْخَالِقُونَ",
+          transliteration: "Am khuliqu min ghayri shay'in am humul-khaaliqoon",
+          translation: "Or were they created by nothing, or were they the creators [of themselves]?",
+          startTime: 0,
+          endTime: 8
+        },
+        {
+          number: 36,
+          arabic: "أَمْ خَلَقُوا السَّمَاوَاتِ وَالْأَرْضَ",
+          transliteration: "Am khalaqus-samaawaati wal-arda",
+          translation: "Or did they create the heavens and the earth?",
+          startTime: 8,
+          endTime: 14
+        },
+        {
+          number: 37,
+          arabic: "بَل لَّا يُوقِنُونَ",
+          transliteration: "Bal laa yooqinoon",
+          translation: "Rather, they are not certain",
+          startTime: 14,
+          endTime: 20
+        }
+      ]
+    },
+    {
+      id: 7,
+      name: "Surah Al-Mulk (Verses 3-4)",
+      number: 67,
+      verses: 2,
+      meaning: "The Sovereignty",
+      reciter: "Sheikh Mishary Alafasy",
+      location: "Kuwait",
+      summary: "Verses on the perfect creation of the seven heavens and the consistency in Allah's creation",
+      category: 'creation',
+      audioUrl: "https://www.youtube.com/watch?v=24aZLTMzitE",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 3,
+          arabic: "الَّذِي خَلَقَ سَبْعَ سَمَاوَاتٍ طِبَاقًا",
+          transliteration: "Allazee khalaqa sab'a samaawaatin tibaaqa",
+          translation: "[He] who created seven heavens in layers",
+          startTime: 0,
+          endTime: 6
+        },
+        {
+          number: 4,
+          arabic: "مَّا تَرَىٰ فِي خَلْقِ الرَّحْمَٰنِ مِن تَفَاوُتٍ",
+          transliteration: "Maa taraa fee khalqir-rahmaani min tafaawut",
+          translation: "You do not see in the creation of the Most Merciful any inconsistency",
+          startTime: 6,
+          endTime: 14
+        }
+      ]
+    },
+    {
+      id: 8,
+      name: "Surah Ad-Duha",
+      number: 93,
+      verses: 11,
+      meaning: "The Morning Hours",
+      reciter: "Sheikh Mishary Alafasy",
+      location: "Kuwait",
+      summary: "A comforting surah revealed to console the Prophet during difficult times, reminding him of Allah's favor and the promise of ease after hardship",
+      category: 'mercy',
+      audioUrl: "https://www.youtube.com/watch?v=RjAJV8_jYQk",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 1,
+          arabic: "وَالضُّحَىٰ",
+          transliteration: "Wad-duhaa",
+          translation: "By the morning brightness",
+          startTime: 0,
+          endTime: 4
+        },
+        {
+          number: 2,
+          arabic: "وَاللَّيْلِ إِذَا سَجَىٰ",
+          transliteration: "Wal-laili izaa sajaa",
+          translation: "And [by] the night when it covers with darkness",
+          startTime: 4,
+          endTime: 8
+        },
+        {
+          number: 3,
+          arabic: "مَا وَدَّعَكَ رَبُّكَ وَمَا قَلَىٰ",
+          transliteration: "Maa wadda'aka rabbuka wa maa qalaa",
+          translation: "Your Lord has not taken leave of you, [O Muhammad], nor has He detested [you]",
+          startTime: 8,
+          endTime: 14
+        },
+        {
+          number: 4,
+          arabic: "وَلَلْآخِرَةُ خَيْرٌ لَّكَ مِنَ الْأُولَىٰ",
+          transliteration: "Wal-l-aakhiratu khayrun laka minal-oolaa",
+          translation: "And the Hereafter is better for you than the first [life]",
+          startTime: 14,
+          endTime: 20
+        },
+        {
+          number: 5,
+          arabic: "وَلَسَوْفَ يُعْطِيكَ رَبُّكَ فَتَرْضَىٰ",
+          transliteration: "Wa lasawfa yu'teeka rabbuka fa tardaa",
+          translation: "And your Lord is going to give you, and you will be satisfied",
+          startTime: 20,
+          endTime: 26
+        },
+        {
+          number: 6,
+          arabic: "أَلَمْ يَجِدْكَ يَتِيمًا فَآوَىٰ",
+          transliteration: "Alam yajidka yateeman fa aawaa",
+          translation: "Did He not find you an orphan and give [you] refuge?",
+          startTime: 26,
+          endTime: 32
+        },
+        {
+          number: 7,
+          arabic: "وَوَجَدَكَ ضَالًّا فَهَدَىٰ",
+          transliteration: "Wa wajadaka daallan fa hadaa",
+          translation: "And He found you lost and guided [you]",
+          startTime: 32,
+          endTime: 38
+        },
+        {
+          number: 8,
+          arabic: "وَوَجَدَكَ عَائِلًا فَأَغْنَىٰ",
+          transliteration: "Wa wajadaa 'aa'ilan fa aghnaa",
+          translation: "And He found you poor and made [you] self-sufficient",
+          startTime: 38,
+          endTime: 44
+        },
+        {
+          number: 9,
+          arabic: "فَأَمَّا الْيَتِيمَ فَلَا تَقْهَرْ",
+          transliteration: "Fa-ammal-yateema falaa taqhar",
+          translation: "So as for the orphan, do not oppress [him]",
+          startTime: 44,
+          endTime: 50
+        },
+        {
+          number: 10,
+          arabic: "وَأَمَّا السَّائِلَ فَلَا تَنْهَرْ",
+          transliteration: "Wa-ammaas-saa'ila falaa tanhar",
+          translation: "And as for the petitioner, do not repel [him]",
+          startTime: 50,
+          endTime: 56
+        },
+        {
+          number: 11,
+          arabic: "وَأَمَّا بِنِعْمَةِ رَبِّكَ فَحَدِّثْ",
+          transliteration: "Wa amma bini'mati rabbika fa haddith",
+          translation: "But as for the favor of your Lord, report [it]",
+          startTime: 56,
+          endTime: 62
+        }
+      ]
+    },
+    {
+      id: 9,
+      name: "Surah Ash-Sharh",
+      number: 94,
+      verses: 8,
+      meaning: "The Relief",
+      reciter: "Sheikh Mishary Alafasy",
+      location: "Kuwait",
+      summary: "A surah of comfort and hope, promising that with hardship comes ease, and encouraging gratitude and worship",
+      category: 'mercy',
+      audioUrl: "https://www.youtube.com/watch?v=20JzAXx5Diw",
+      isYouTube: true,
+      versesData: [
+        {
+          number: 1,
+          arabic: "أَلَمْ نَشْرَحْ لَكَ صَدْرَكَ",
+          transliteration: "Alam nashrah laka sadrak",
+          translation: "Did We not expand for you, [O Muhammad], your breast?",
+          startTime: 0,
+          endTime: 5
+        },
+        {
+          number: 2,
+          arabic: "وَوَضَعْنَا عَنكَ وِزْرَكَ",
+          transliteration: "Wa wada'na 'anka wizrak",
+          translation: "And We removed from you your burden",
+          startTime: 5,
+          endTime: 10
+        },
+        {
+          number: 3,
+          arabic: "الَّذِي أَنقَضَ ظَهْرَكَ",
+          transliteration: "Allazee anqada zahrak",
+          translation: "Which had weighed upon your back",
+          startTime: 10,
+          endTime: 15
+        },
+        {
+          number: 4,
+          arabic: "وَرَفَعْنَا لَكَ ذِكْرَكَ",
+          transliteration: "Wa rafa'naa laka dhikrak",
+          translation: "And We raised high for you your repute",
+          startTime: 15,
+          endTime: 20
+        },
+        {
+          number: 5,
+          arabic: "فَإِنَّ مَعَ الْعُسْرِ يُسْرًا",
+          transliteration: "Fa-inna ma'al-'usri yusraa",
+          translation: "For indeed, with hardship [will be] ease",
+          startTime: 20,
+          endTime: 26
+        },
+        {
+          number: 6,
+          arabic: "إِنَّ مَعَ الْعُسْرِ يُسْرًا",
+          transliteration: "Inna ma'al-'usri yusraa",
+          translation: "Indeed, with hardship [will be] ease",
+          startTime: 26,
+          endTime: 32
+        },
+        {
+          number: 7,
+          arabic: "فَإِذَا فَرَغْتَ فَانصَبْ",
+          transliteration: "Fa-izaa faraghta fansab",
+          translation: "So when you have finished [your duties], then stand up [for worship]",
+          startTime: 32,
+          endTime: 38
+        },
+        {
+          number: 8,
+          arabic: "وَإِلَىٰ رَبِّكَ فَارْغَبْ",
+          transliteration: "Wa ilaa rabbika farghab",
+          translation: "And to your Lord direct [your] longing",
+          startTime: 38,
+          endTime: 44
+        }
+      ]
+    }
+  ]
+
+  const filteredSurahs = selectedCategory === 'all'
+    ? surahs
+    : surahs.filter(surah => surah.category === selectedCategory)
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current && expandedSurah !== null) {
+      const time = audioRef.current.currentTime
+      setCurrentTime(time)
+
+      const activeVerse = surahs[expandedSurah]?.versesData?.find(
+        verse => time >= verse.startTime && time < verse.endTime
+      )
+      setCurrentVerse(activeVerse ? activeVerse.number : null)
+    }
+  }
+
+  const handlePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
+    }
+  }
+
+  const handleVerseClick = (startTime) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = startTime
+      if (!isPlaying) {
+        audioRef.current.play()
+        setIsPlaying(true)
+      }
+    }
+  }
+
+  const handleSurahClick = (index) => {
+    if (expandedSurah === index) {
+      setExpandedSurah(null)
+      setIsPlaying(false)
+      setCurrentTime(0)
+      setCurrentVerse(null)
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    } else {
+      setExpandedSurah(index)
+      setCurrentTime(0)
+      setCurrentVerse(null)
+      setIsPlaying(false)
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0
+        audioRef.current.pause()
+      }
+    }
+  }
+
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs.toString().padStart(2, '0')}`
+  }
+
+  const getYouTubeEmbedUrl = (url) => {
+    let videoId = ''
+    if (url.includes('shorts/')) {
+      videoId = url.split('shorts/')[1]?.split('?')[0]
+    } else if (url.includes('v=')) {
+      videoId = url.split('v=')[1]?.split('&')[0]
+    }
+    return `https://www.youtube.com/embed/${videoId}?enablejsapi=1`
+  }
+
+  return (
+    <div className="interactive-player">
+      <div className="category-filter">
+        <h3 className="filter-title">Filter by Theme:</h3>
+        <div className="category-buttons">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className={`category-btn ${selectedCategory === category.id ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(category.id)}
+            >
+              <span className="category-icon">{category.icon}</span>
+              <span className="category-name">{category.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="surahs-grid">
+        {filteredSurahs.map((surah, index) => {
+          const originalIndex = surahs.findIndex(s => s.id === surah.id)
+          return (
+            <div
+              key={surah.id}
+              className={`surah-card ${expandedSurah === originalIndex ? 'expanded' : ''}`}
+              onClick={() => handleSurahClick(originalIndex)}
+            >
+            <div className="surah-card-header">
+              <div className="surah-card-number">{surah.number}</div>
+              <div className="surah-card-info">
+                <h4 className="surah-card-name">{surah.name}</h4>
+                <p className="surah-card-details">
+                  {surah.verses} verses • {surah.reciter}
+                </p>
+                <p className="surah-card-summary">{surah.summary}</p>
+              </div>
+              <div className="surah-card-arrow">
+                {expandedSurah === originalIndex ? '▲' : '▼'}
+              </div>
+            </div>
+
+            {expandedSurah === originalIndex && (
+              <div className="surah-card-content" onClick={(e) => e.stopPropagation()}>
+                <div className="surah-info">
+                  <p className="surah-meaning">
+                    <strong>Meaning:</strong> {surah.meaning}
+                  </p>
+                  <p className="reciter-info">
+                    Recited by: <strong>{surah.reciter}</strong> ({surah.location})
+                  </p>
+                </div>
+
+                {surah.isYouTube ? (
+                  <div className="youtube-embed">
+                    <iframe
+                      width="100%"
+                      height="200"
+                      src={getYouTubeEmbedUrl(surah.audioUrl)}
+                      title="Quran Recitation"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <div className="player-controls">
+                      <button
+                        className={`play-button ${isPlaying ? 'playing' : ''}`}
+                        onClick={handlePlayPause}
+                      >
+                        {isPlaying ? '⏸️' : '▶️'}
+                      </button>
+                      <div className="time-display">
+                        <span>{formatTime(currentTime)}</span>
+                        <span className="time-separator">/</span>
+                        <span>{formatTime(surah.versesData[surah.versesData.length - 1].endTime)}</span>
+                      </div>
+                    </div>
+
+                    <audio
+                      ref={audioRef}
+                      src={surah.audioUrl}
+                      onTimeUpdate={handleTimeUpdate}
+                      onEnded={() => setIsPlaying(false)}
+                      onPlay={() => setIsPlaying(true)}
+                      onPause={() => setIsPlaying(false)}
+                    />
+                  </>
+                )}
+
+                <div className="verses-container">
+                  {surah.versesData.map((verse) => (
+                    <div
+                      key={verse.number}
+                      className={`verse-item ${currentVerse === verse.number ? 'active' : ''}`}
+                      onClick={() => !surah.isYouTube && handleVerseClick(verse.startTime)}
+                      style={{ cursor: surah.isYouTube ? 'default' : 'pointer' }}
+                    >
+                      <div className="verse-number">{verse.number}</div>
+                      <div className="verse-content">
+                        <div className="verse-arabic">{verse.arabic}</div>
+                        <div className="verse-transliteration">{verse.transliteration}</div>
+                        <div className="verse-translation">{verse.translation}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          )
+        })}
+      </div>
+
+      <div className="player-instructions">
+        <p>💡 <strong>Tip:</strong> Use the category filter above to find surahs by theme. Click on a surah card to expand it and see the verses. For surahs with audio players, click on any verse to jump to that part of the recitation. The current verse will be highlighted as you listen.</p>
+      </div>
+    </div>
+  )
+}
+
 function QuranSection() {
   const [activeSection, setActiveSection] = useState('overview')
   const [expandedAyah, setExpandedAyah] = useState(null)
@@ -2798,6 +3715,18 @@ function QuranSection() {
           ]
         }
       ]
+    },
+    interactive: {
+      title: "Interactive Recitation Player",
+      content: [
+        {
+          heading: "Listen and Learn",
+          text: "Experience the beauty of Quran recitation with our interactive player. Click on any surah card below to expand it and see the verses. For surahs with audio players, you can listen to the recitation and follow along with the Arabic text and translation. Each verse is highlighted in real-time as it's being recited.",
+          surahInfo: {},
+          audioUrl: "",
+          verses: []
+        }
+      ]
     }
   }
 
@@ -2806,6 +3735,7 @@ function QuranSection() {
     { id: 'miracles', name: 'Scientific Miracles', icon: '🔬' },
     { id: 'modern', name: 'Modern Relevance', icon: '🌍' },
     { id: 'powerful', name: 'Powerful Verses', icon: '✨' },
+    { id: 'interactive', name: 'Interactive Player', icon: '🎧' },
     { id: 'recitations', name: 'Recitations', icon: '🎵' }
   ]
 
@@ -2888,6 +3818,14 @@ function QuranSection() {
               </div>
             )}
             
+            {item.heading === "Listen and Learn" && (
+              <InteractiveRecitationPlayer
+                surahInfo={item.surahInfo}
+                audioUrl={item.audioUrl}
+                verses={item.verses}
+              />
+            )}
+
             {item.tips && (
               <div className="quran-tips-list">
                 <ul>
